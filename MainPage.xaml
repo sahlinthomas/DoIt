@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:DoIt" 
+             x:Class="DoIt.MainPage"
+             BackgroundColor="#121212"
+             NavigationPage.HasNavigationBar="False">
+
+
+    <StackLayout Padding="10">
+
+        <Label Text="To Do List"
+               TextColor="White"
+               FontSize="34"
+               FontAttributes="Bold"
+               HorizontalOptions="Center" 
+               Margin="0,10" />
+
+        <!-- Add- -->
+        <Button Text="Add task" 
+        Command="{Binding AddCommand}" 
+        BackgroundColor="#387478" 
+        TextColor="White"
+        FontAttributes="Bold" 
+        FontSize="18" 
+        Margin="0,10" />
+
+        <CollectionView ItemsSource="{Binding GroupedTodoItems}" 
+                IsGrouped="True"
+                SelectionMode="Single">
+
+
+            <!-- Header -->
+            <CollectionView.GroupHeaderTemplate>
+                <DataTemplate>
+                    <StackLayout BackgroundColor="#333333" Padding="5" Margin="0,15,0,0">
+                        <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="24" TextColor="White" />
+                    </StackLayout>
+                </DataTemplate>
+            </CollectionView.GroupHeaderTemplate>
+
+            <!-- ItemTemplate -->
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid ColumnDefinitions="Auto, *, Auto, Auto" Padding="5" BackgroundColor="#2C2C2C" Margin="0,2">
+                        <!-- Checkbox -->
+                        <CheckBox IsChecked="{Binding IsCompleted, Mode=TwoWay}" 
+                      VerticalOptions="Center"
+                      Grid.Column="0" />
+
+                        <!-- Title -->
+                        <Label Text="{Binding Title}"
+                   TextColor="White"
+                   VerticalOptions="Center"
+                   FontSize="18"
+                   Grid.Column="1">
+                            <Label.Triggers>
+                                <DataTrigger TargetType="Label" Binding="{Binding IsCompleted}" Value="True">
+                                    <Setter Property="TextDecorations" Value="Strikethrough" />
+                                    <Setter Property="TextColor" Value="#B3B3B3" />
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
+
+                        <!-- Edit -->
+                        <Button Text="Edit"
+                    Command="{Binding Source={RelativeSource AncestorType={x:Type local:MainPage}}, Path=BindingContext.EditCommand}"
+                    CommandParameter="{Binding .}"
+                    BackgroundColor="Transparent"
+                    TextColor="#4CAF50"
+                    FontAttributes="Bold"
+                    HorizontalOptions="End"
+                    Margin="0,0,5,0"
+                    Grid.Column="2">
+                            <Button.Triggers>
+                                <DataTrigger TargetType="Button" Binding="{Binding IsCompleted}" Value="True">
+                                    <Setter Property="IsVisible" Value="False" />
+                                </DataTrigger>
+                            </Button.Triggers>
+                        </Button>
+
+                        <!-- Delete -->
+                        <Button Text="Delete"
+                    Command="{Binding Source={RelativeSource AncestorType={x:Type local:MainPage}}, Path=BindingContext.DeleteCommand}"
+                    CommandParameter="{Binding .}"
+                    BackgroundColor="Transparent"
+                    TextColor="#FF5252"
+                    FontAttributes="Bold"
+                    HorizontalOptions="End"
+                    Margin="0,0,10,0"
+                    Grid.Column="3" />
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <Button Text="Clear All Completed" 
+        Command="{Binding ClearCompletedCommand}" 
+        BackgroundColor="#FF5252" 
+        TextColor="White"
+        FontAttributes="Bold"
+        Margin="0,10" />
+    </StackLayout>
+
+</ContentPage>
